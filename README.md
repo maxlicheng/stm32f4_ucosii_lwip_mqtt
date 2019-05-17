@@ -21,10 +21,23 @@
 5.可用USB线接串口1，在串口中断上查看开发板运行状态
 
 ## 具体使用方式，可参考以下文章和视频
-1.开发板演示视频
+1.项目演示视频
+
+https://www.bilibili.com/video/av52731912/
 
 2.阿里云创建物联网设备教程
 
-3.后续完善
+https://www.bilibili.com/video/av52731912/?p=2
 
+3.MQTT协议简介
+
+https://www.bilibili.com/video/av52731912/?p=3
+
+4.基于github项目制作的MQTT点阵显示系统
+
+https://www.bilibili.com/video/av52731912/?p=4
+
+5.个人博客
+
+www.maxlicheng.com
 
