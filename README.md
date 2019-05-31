@@ -39,5 +39,8 @@ https://www.bilibili.com/video/av52731912/?p=4
 
 5.个人博客
 
-www.maxlicheng.com
+http://www.maxlicheng.com/?p=17
+
+http://www.maxlicheng.com/?p=20
+
 
