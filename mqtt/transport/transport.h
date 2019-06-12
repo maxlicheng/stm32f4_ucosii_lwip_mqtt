@@ -14,6 +14,15 @@
  *    Ian Craggs - initial API and implementation and/or initial documentation
  *    Sergio R. Caprile - "commonalization" from prior samples and/or documentation extension
  *******************************************************************************/
+ 
+  /**********************************************************************************************************
+** 文件名			:transport.h
+** 作者				:maxlicheng<licheng.chn@outlook.com>
+** 作者github	:https://github.com/maxlicheng
+** 作者博客		:https://www.maxlicheng.com/	
+** 生成日期		:2018-08-08
+** 描述				:mqtt通信接口头文件
+/**********************************************************************************************************/
 
 int transport_sendPacketBuffer(int sock, unsigned char* buf, int buflen);
 int transport_getdata(unsigned char* buf, int count);

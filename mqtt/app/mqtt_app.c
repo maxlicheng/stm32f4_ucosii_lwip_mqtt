@@ -1,3 +1,11 @@
+/**********************************************************************************************************
+** 文件名			:mqtt_app.c
+** 作者				:maxlicheng<licheng.chn@outlook.com>
+** 作者github	:https://github.com/maxlicheng
+** 作者博客		:https://www.maxlicheng.com/	
+** 生成日期		:2018-08-08
+** 描述				:mqtt服务程序
+/**********************************************************************************************************/
 #include "mqtt_app.h"
 #include "MQTTPacket.h"
 #include "transport.h"
