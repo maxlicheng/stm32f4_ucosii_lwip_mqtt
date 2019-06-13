@@ -1,11 +1,11 @@
 /**********************************************************************************************************
-** 文件名			:mqtt_app.c
-** 作者				:maxlicheng<licheng.chn@outlook.com>
+** 文件名		:mqtt_app.c
+** 作者			:maxlicheng<licheng.chn@outlook.com>
 ** 作者github	:https://github.com/maxlicheng
 ** 作者博客		:https://www.maxlicheng.com/	
 ** 生成日期		:2018-08-08
-** 描述				:mqtt服务程序
-/**********************************************************************************************************/
+** 描述			:mqtt服务程序
+************************************************************************************************************/
 #include "mqtt_app.h"
 #include "MQTTPacket.h"
 #include "transport.h"
@@ -184,7 +184,7 @@ void mqtt_thread(void)
 			case PUBLISH:	rc = MQTTDeserialize_publish(&dup, &qos, &retained, &msgid, &receivedTopic,&payload_in, &payloadlen_in, (unsigned char*)buf, buflen);	//服务器有推送信息
 							printf("message arrived : %s\r\n", payload_in);
 							cJSON *json , *json_params, *json_id, *json_led, *json_display;
-							json = cJSON_Parse(payload_in);			//解析数据包
+							json = cJSON_Parse((char *)payload_in);			//解析数据包
 							if (!json)  
 							{  
 								printf("Error before: [%s]\r\n",cJSON_GetErrorPtr());  
@@ -199,36 +199,38 @@ void mqtt_thread(void)
 								json_params = cJSON_GetObjectItem(json , "params");  
 								if(json_params)  
 								{  
-									json_led  = cJSON_GetObjectItem(json_params, "led");
-									if(json_led->type == cJSON_Number)
+									if(cJSON_GetObjectItem(json_params, "led"))
 									{
-										printf("LED:%d\r\n", json_led->valueint);  
-										LED1 = ~(json_led->valueint);
+										json_led  = cJSON_GetObjectItem(json_params, "led");
+										if(json_led->type == cJSON_Number)
+										{
+											printf("LED:%d\r\n", json_led->valueint);  
+											LED1 = ~(json_led->valueint);
+										}
 									}
-									json_display = cJSON_GetObjectItem(json_params, "display");
-									if (json_display->type == cJSON_String)  
-									{  
-										u8 *showbuf;
-										showbuf = mymalloc(SRAMIN, 200);
-										memset(showbuf, 0, 200);
-										Utf8ToGb2312(json_display->valuestring, strlen(json_display->valuestring), showbuf);
+									if(cJSON_GetObjectItem(json_params, "display"))
+									{
+										json_display = cJSON_GetObjectItem(json_params, "display");
+										if (json_display->type == cJSON_String)  
+										{  
+											u8 *showbuf;
+											showbuf = mymalloc(SRAMIN, 200);
+											memset(showbuf, 0, 200);
+											Utf8ToGb2312(json_display->valuestring, strlen(json_display->valuestring), showbuf);
 //										Show_Str(30,244,200,16,"对应汉字(16*16)为:",16,0);
-										POINT_COLOR = BLUE;
-										LCD_DrawRectangle(10,210,230,300);
-										LCD_Fill(11,211,229,299,WHITE);
+											POINT_COLOR = BLUE;
+											LCD_DrawRectangle(10,210,230,300);
+											LCD_Fill(11,211,229,299,WHITE);
 //										POINT_COLOR = BLUE;
-										Show_Str(30,220,200,16,showbuf,16,0);	
-										printf("display：%s\r\n", json_display->valuestring);  
+											Show_Str(30,220,200,16,showbuf,16,0);	
+											printf("display：%s\r\n", json_display->valuestring);  
 //										LCD_ShowString(30,190,210,16,16,json_display->valuestring); 
-										myfree(SRAMIN, showbuf);
-									}  
+											myfree(SRAMIN, showbuf);
+										}  
+									}
 								} 
 							}
 							cJSON_Delete(json);
-							my_free(json_display);
-							my_free(json_params);
-							my_free(json_id);
-							my_free(json_led);
 							
 							if(qos == 1)
 							{
