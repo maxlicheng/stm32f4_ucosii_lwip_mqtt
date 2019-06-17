@@ -37,7 +37,11 @@ https://www.bilibili.com/video/av52731912/?p=3
 
 https://www.bilibili.com/video/av52731912/?p=4
 
-5.个人博客
+5.MQTT协议学习及调试利器——mqtt.fx
+
+https://www.bilibili.com/video/av55897653/
+
+6.个人博客
 
 https://www.maxlicheng.com
 
