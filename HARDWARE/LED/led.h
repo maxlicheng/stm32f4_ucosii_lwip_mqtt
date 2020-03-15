@@ -19,5 +19,6 @@
 #define LED1 PFout(10)
 
 void LED_Init(void); //≥ı ºªØ
-void Set_Led(u8 LED,u8 state);
+void Set_Led(u8 LED, u8 state);
+
 #endif

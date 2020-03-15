@@ -31,26 +31,12 @@ void LED_Init(void)
 	GPIO_SetBits(GPIOF,GPIO_Pin_9|GPIO_Pin_10); //GPIOF9,10∏ﬂµÁ∆Ω
 }
 
-void Set_Led(u8 LED,u8 state)
+void Set_Led(u8 LED, u8 state)
 {
-	if(LED==0)
-	{
-		switch(state)
-		{
-			case 0: LED0=1;
-							break;
-			case 1: LED0=0;
-							break;
-		}
-	}else if(LED==1)
-	{
-		switch(state)
-		{
-			case 0: LED1=1;
-							break;
-			case 1: LED1=0;
-							break;
-		}
-	}
+    if(0 == LED){
+        LED0 = state ? 0:1;
+    }else{
+        LED1 = state ? 0:1;
+    }
 }
 
