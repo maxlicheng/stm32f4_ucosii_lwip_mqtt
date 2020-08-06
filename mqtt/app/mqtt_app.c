@@ -1,10 +1,10 @@
 /**********************************************************************************************************
-** ÎÄ¼şÃû		:mqtt_app.c
-** ×÷Õß			:maxlicheng<licheng.chn@outlook.com>
-** ×÷Õßgithub	:https://github.com/maxlicheng
-** ×÷Õß²©¿Í		:https://www.maxlicheng.com/	
-** Éú³ÉÈÕÆÚ		:2018-08-08
-** ÃèÊö			:mqtt·şÎñ³ÌĞò
+** æ–‡ä»¶å       :mqtt_app.c
+** ä½œè€…         :maxlicheng<licheng.chn@outlook.com>
+** ä½œè€…github   :https://github.com/maxlicheng
+** ä½œè€…åšå®¢     :https://www.maxlicheng.com/
+** ç”Ÿæˆæ—¥æœŸ     :2018-08-08
+** æè¿°         :mqttæœåŠ¡ç¨‹åº
 ************************************************************************************************************/
 #include "mqtt_app.h"
 #include "MQTTPacket.h"
@@ -22,9 +22,9 @@
 #include "cJSON.h"
 
 #include "U2GBK.h"
-#include "text.h"	
+#include "text.h"
 
-#define send_duration	10	//ÎÂ¶È·¢ËÍÖÜÆÚ£¨ms£©
+#define send_duration	10	//æ¸©åº¦å‘é€å‘¨æœŸï¼ˆmsï¼‰
 
 float temp = 0;
 float humid = 0;
@@ -61,8 +61,8 @@ void mqtt_thread(void)
 	int qos;
 	unsigned char retained = 0;
 
-	uint8_t connect_flag = 0;		//Á¬½Ó±êÖ¾
-	uint8_t msgtypes = CONNECT;		//ÏûÏ¢×´Ì¬³õÊ¼»¯
+	uint8_t connect_flag = 0;		//è¿æ¥æ ‡å¿—
+	uint8_t msgtypes = CONNECT;		//æ¶ˆæ¯çŠ¶æ€åˆå§‹åŒ–
 	uint8_t t=0;
 	
 	printf("socket connect to server\r\n");
@@ -83,12 +83,12 @@ void mqtt_thread(void)
 	printf("Sending to hostname %s port %d\r\n", HOST_NAME, HOST_PORT);
 	
 	data.clientID.cstring = CLIENT_ID;
-	data.keepAliveInterval = 70;		//ĞÄÌøÊ±³¤
+	data.keepAliveInterval = 70;		//å¿ƒè·³æ—¶é•¿
 	data.cleansession = 1;
 	data.username.cstring = USER_NAME;
 	char *PASSWORD;
 	PASSWORD = mymalloc(SRAMEX, 200);
-	getPassword(DEVICE_SECRET, CONTENT, PASSWORD);			//Í¨¹ıhmac_sha1Ëã·¨µÃµ½password
+	getPassword(DEVICE_SECRET, CONTENT, PASSWORD);			//é€šè¿‡hmac_sha1ç®—æ³•å¾—åˆ°password
 	printf("\r\nPassWord = %s\r\n\r\n", PASSWORD);
 	data.password.cstring = PASSWORD;
 	data.MQTTVersion = 4;
@@ -101,7 +101,7 @@ void mqtt_thread(void)
 	uint32_t sendtick = OSTimeGet();
 	while(1)
 	{
-		if((OSTimeGet() - curtick) >(data.keepAliveInterval*200))		//uCosII Ã¿Ãë200´Îtick
+		if((OSTimeGet() - curtick) >(data.keepAliveInterval*200))		//uCosII æ¯ç§’200æ¬¡tick
 		{
 			if(msgtypes == 0)
 			{
@@ -115,14 +115,14 @@ void mqtt_thread(void)
 			if((OSTimeGet() - sendtick) >= (send_duration*200))
 			{
 				sendtick = OSTimeGet();
-				OS_ENTER_CRITICAL();	//½øÈëÁÙ½çÇø(ÎŞ·¨±»ÖĞ¶Ï´ò¶Ï)
+				OS_ENTER_CRITICAL();	//è¿›å…¥ä¸´ç•ŒåŒº(æ— æ³•è¢«ä¸­æ–­æ‰“æ–­)
 				temp = DS18B20_Get_Temp()/10.0;
-				OS_EXIT_CRITICAL();		//ÍË³öÁÙ½çÇø(¿ÉÒÔ±»ÖĞ¶Ï´ò¶Ï)
+				OS_EXIT_CRITICAL();		//é€€å‡ºä¸´ç•ŒåŒº(å¯ä»¥è¢«ä¸­æ–­æ‰“æ–­)
 //				temp = 24.7+rand()%10+1;
 				humid = 54.8+rand()%10+1;
 				sprintf((char*)payload_out,"{\"params\":{\"CurrentTemperature\":+%0.1f,\"RelativeHumidity\":%0.1f},\"method\":\"thing.event.property.post\"}",temp, humid);
 				payload_out_len = strlen((char*)payload_out);
-				topicString.cstring = DEVICE_PUBLISH;		//ÊôĞÔÉÏ±¨ ·¢²¼
+				topicString.cstring = DEVICE_PUBLISH;		//å±æ€§ä¸ŠæŠ¥ å‘å¸ƒ
 				len = MQTTSerialize_publish((unsigned char*)buf, buflen, 0, req_qos, retained, msgid, topicString, payload_out, payload_out_len);
 				rc = transport_sendPacketBuffer(mysock, (unsigned char*)buf, len);
 				if(rc == len)															//
@@ -135,8 +135,8 @@ void mqtt_thread(void)
 		switch(msgtypes)
 		{
 
-			case CONNECT:	len = MQTTSerialize_connect((unsigned char*)buf, buflen, &data); 						//»ñÈ¡Êı¾İ×é³¤¶È		·¢ËÍÁ¬½ÓĞÅÏ¢     
-							rc = transport_sendPacketBuffer(mysock, (unsigned char*)buf, len);		//·¢ËÍ ·µ»Ø·¢ËÍÊı×é³¤¶È
+			case CONNECT:	len = MQTTSerialize_connect((unsigned char*)buf, buflen, &data); 						//è·å–æ•°æ®ç»„é•¿åº¦		å‘é€è¿æ¥ä¿¡æ¯     
+							rc = transport_sendPacketBuffer(mysock, (unsigned char*)buf, len);		//å‘é€ è¿”å›å‘é€æ•°ç»„é•¿åº¦
 							if(rc == len)															//
 								printf("send CONNECT Successfully\r\n");
 							else
@@ -145,16 +145,16 @@ void mqtt_thread(void)
 							msgtypes = 0;
 							break;
 
-			case CONNACK:   if(MQTTDeserialize_connack(&sessionPresent, &connack_rc, (unsigned char*)buf, buflen) != 1 || connack_rc != 0)	//ÊÕµ½»ØÖ´
+			case CONNACK:   if(MQTTDeserialize_connack(&sessionPresent, &connack_rc, (unsigned char*)buf, buflen) != 1 || connack_rc != 0)	//æ”¶åˆ°å›æ‰§
 							{
-								printf("Unable to connect, return code %d\r\n", connack_rc);		//»ØÖ´²»Ò»ÖÂ£¬Á¬½ÓÊ§°Ü
+								printf("Unable to connect, return code %d\r\n", connack_rc);		//å›æ‰§ä¸ä¸€è‡´ï¼Œè¿æ¥å¤±è´¥
 							}
 							else
 							{
-								printf("MQTT is concet OK!\r\n");									//Á¬½Ó³É¹¦
+								printf("MQTT is concet OK!\r\n");									//è¿æ¥æˆåŠŸ
 								connect_flag = 1;
 							}
-							msgtypes = SUBSCRIBE;													//Á¬½Ó³É¹¦ Ö´ĞĞ ¶©ÔÄ ²Ù×÷
+							msgtypes = SUBSCRIBE;													//è¿æ¥æˆåŠŸ æ‰§è¡Œ è®¢é˜… æ“ä½œ
 							break;
 			case SUBSCRIBE: topicString.cstring = DEVICE_SUBSCRIBE;
 							len = MQTTSerialize_subscribe((unsigned char*)buf, buflen, 0, msgid, 1, &topicString, &req_qos);
@@ -177,14 +177,14 @@ void mqtt_thread(void)
 							printf("client subscribe:[%s]\r\n",topicString.cstring);
 							msgtypes = 0;
 							break;
-			case SUBACK: 	rc = MQTTDeserialize_suback(&submsgid, 1, &subcount, &granted_qos, (unsigned char*)buf, buflen);	//ÓĞ»ØÖ´  QoS                                                     
-							printf("granted qos is %d\r\n", granted_qos);         								//´òÓ¡ Qos                                                       
+			case SUBACK: 	rc = MQTTDeserialize_suback(&submsgid, 1, &subcount, &granted_qos, (unsigned char*)buf, buflen);	//æœ‰å›æ‰§  QoS                                                     
+							printf("granted qos is %d\r\n", granted_qos);         								//æ‰“å° Qos                                                       
 							msgtypes = 0;
 							break;
-			case PUBLISH:	rc = MQTTDeserialize_publish(&dup, &qos, &retained, &msgid, &receivedTopic,&payload_in, &payloadlen_in, (unsigned char*)buf, buflen);	//·şÎñÆ÷ÓĞÍÆËÍĞÅÏ¢
+			case PUBLISH:	rc = MQTTDeserialize_publish(&dup, &qos, &retained, &msgid, &receivedTopic,&payload_in, &payloadlen_in, (unsigned char*)buf, buflen);	//æœåŠ¡å™¨æœ‰æ¨é€ä¿¡æ¯
 							printf("message arrived : %s\r\n", payload_in);
 							cJSON *json , *json_params, *json_id, *json_led, *json_display;
-							json = cJSON_Parse((char *)payload_in);			//½âÎöÊı¾İ°ü
+							json = cJSON_Parse((char *)payload_in);			//è§£ææ•°æ®åŒ…
 							if (!json)  
 							{  
 								printf("Error before: [%s]\r\n",cJSON_GetErrorPtr());  
@@ -217,13 +217,13 @@ void mqtt_thread(void)
 											showbuf = mymalloc(SRAMIN, 200);
 											memset(showbuf, 0, 200);
 											Utf8ToGb2312(json_display->valuestring, strlen(json_display->valuestring), showbuf);
-//										Show_Str(30,244,200,16,"¶ÔÓ¦ºº×Ö(16*16)Îª:",16,0);
+//										Show_Str(30,244,200,16,"å¯¹åº”æ±‰å­—(16*16)ä¸º:",16,0);
 											POINT_COLOR = BLUE;
 											LCD_DrawRectangle(10,210,230,300);
 											LCD_Fill(11,211,229,299,WHITE);
 //										POINT_COLOR = BLUE;
 											Show_Str(30,220,200,16,showbuf,16,0);	
-											printf("display£º%s\r\n", json_display->valuestring);  
+											printf("displayï¼š%s\r\n", json_display->valuestring);  
 //										LCD_ShowString(30,190,210,16,16,json_display->valuestring); 
 											myfree(SRAMIN, showbuf);
 										}  
@@ -234,7 +234,7 @@ void mqtt_thread(void)
 							
 							if(qos == 1)
 							{
-								printf("publish qos is 1,send publish ack.\r\n");							//QosÎª1£¬½øĞĞ»ØÖ´ ÏìÓ¦
+								printf("publish qos is 1,send publish ack.\r\n");							//Qosä¸º1ï¼Œè¿›è¡Œå›æ‰§ å“åº”
 								memset(buf,0,buflen);
 								len = MQTTSerialize_ack((unsigned char*)buf,buflen,PUBACK,dup,msgid);   					//publish ack                       
 								rc = transport_sendPacketBuffer(mysock, (unsigned char*)buf, len);			//
@@ -245,7 +245,7 @@ void mqtt_thread(void)
 							}
 							msgtypes = 0;
 							break;
-			case PUBACK:    printf("PUBACK!\r\n");					//·¢²¼³É¹¦
+			case PUBACK:    printf("PUBACK!\r\n");					//å‘å¸ƒæˆåŠŸ
 							msgtypes = 0;
 							break;
 
@@ -255,7 +255,7 @@ void mqtt_thread(void)
 							break;
 			case PUBCOMP:   printf("PUBCOMP!\r\n");        			//just for qos2
 							break;
-			case PINGREQ:   len = MQTTSerialize_pingreq((unsigned char*)buf, buflen);							//ĞÄÌø
+			case PINGREQ:   len = MQTTSerialize_pingreq((unsigned char*)buf, buflen);							//å¿ƒè·³
 							rc = transport_sendPacketBuffer(mysock, (unsigned char*)buf, len);
 							if(rc == len)
 								printf("send PINGREQ Successfully\r\n");
@@ -264,7 +264,7 @@ void mqtt_thread(void)
 								printf("time to ping mqtt server to take alive!\r\n");
 								msgtypes = 0;
 							break;
-			case PINGRESP:	printf("mqtt server Pong\r\n");  			//ĞÄÌø»ØÖ´£¬·şÎñÓĞÏìÓ¦                                                     
+			case PINGRESP:	printf("mqtt server Pong\r\n");  			//å¿ƒè·³å›æ‰§ï¼ŒæœåŠ¡æœ‰å“åº”                                                     
 							msgtypes = 0;
 							break;
 			default:
@@ -272,12 +272,13 @@ void mqtt_thread(void)
 
 		}
 		memset(buf,0,buflen);
-		rc=MQTTPacket_read((unsigned char*)buf, buflen, transport_getdata);       	//ÂÖÑ¯£¬¶ÁMQTT·µ»ØÊı¾İ£¬
-		if(rc >0)													//Èç¹ûÓĞÊı¾İ£¬½øÈëÏàÓ¦×´Ì¬¡£
+		rc=MQTTPacket_read((unsigned char*)buf, buflen, transport_getdata);       	//è½®è¯¢ï¼Œè¯»MQTTè¿”å›æ•°æ®ï¼Œ
+		if(rc >0)													//å¦‚æœæœ‰æ•°æ®ï¼Œè¿›å…¥ç›¸åº”çŠ¶æ€ã€‚
 		{
 			msgtypes = rc;
 			printf("MQTT is get recv:\r\n");
 		}
+        delay_ms(100);
 	}
 	transport_close(mysock);
     printf("mqtt thread exit.\r\n");
@@ -288,11 +289,11 @@ void mqtt_thread(void)
 
 /*
 // C prototype : void HexToStr(BYTE *pbDest, BYTE *pbSrc, int nLen)
-// parameter(s): [OUT] pbDest - ´æ·ÅÄ¿±ê×Ö·û´®
-// [IN] pbSrc - ÊäÈë16½øÖÆÊıµÄÆğÊ¼µØÖ·
-// [IN] nLen - 16½øÖÆÊıµÄ×Ö½ÚÊı
+// parameter(s): [OUT] pbDest - å­˜æ”¾ç›®æ ‡å­—ç¬¦ä¸²
+// [IN] pbSrc - è¾“å…¥16è¿›åˆ¶æ•°çš„èµ·å§‹åœ°å€
+// [IN] nLen - 16è¿›åˆ¶æ•°çš„å­—èŠ‚æ•°
 // return value: 
-// remarks : ½«16½øÖÆÊı×ª»¯Îª×Ö·û´®
+// remarks : å°†16è¿›åˆ¶æ•°è½¬åŒ–ä¸ºå­—ç¬¦ä¸²
 */
 void HexToStr(uint8_t *pbDest, uint8_t *pbSrc, int nLen)
 {
@@ -312,7 +313,7 @@ void HexToStr(uint8_t *pbDest, uint8_t *pbSrc, int nLen)
 	pbDest[nLen*2] = '\0';
 }
 
-//Í¨¹ıhmac_sha1Ëã·¨»ñÈ¡password
+//é€šè¿‡hmac_sha1ç®—æ³•è·å–password
 void getPassword(const char *device_secret, const char *content, char *password)
 {
 	char buf[256] = {0};
